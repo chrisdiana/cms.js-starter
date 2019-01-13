@@ -1,0 +1,9 @@
+# bitnamiの右下ロゴを削除するには：AWS　Lightsailで作るWordpress
+
+1. sshで接続
+2. 下記コマンドを入力
+3. 再起動
+```
+sudo /opt/bitnami/apps/wordpress/bnconfig --disable_banner 1
+sudo /opt/bitnami/ctlscript.sh restart apache
+```
