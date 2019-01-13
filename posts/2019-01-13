@@ -1,0 +1,80 @@
+#　Windowsの外付けHDDをRaspberryPiでNAS化：ファイルサーバを構築
+##　前提
+1. Windowsの外付けHDDにはすでにファイルが入っているので、再フォーマットできない
+→ LinuxでもNTFS形式を読み書きできるようにする
+2. RaspberryPiの初期設定は済んでおり、LAN内からアクセス可能
+3. ファイルサーバの読み書きの権限をつけず、ユーザ認証のみ
+
+## 作業手順
+1. MacからRaspberryPiにSSH接続 
+2. NTFS形式のHDDをマウントするために、ntfs-3gをインストール。
+```
+sudo apt-get install ntfs-3g
+```
+3. 外付けHDDをUSB接続し、再起動
+```
+sudo reboot
+```
+4. マウントされているドライブを確認
+```
+# マウントされているドライブ一覧
+df
+
+ファイルシス   1K-ブロック       使用    使用可 使用% マウント位置
+・・・・
+/dev/sda2       2930134012 2290435456 639698556   79% /media/pi/・・・
+・・・
+```
+5. /dev/sda2　として認識されていたので、UUIDを確認し、fstabに追加
+→UUIDではなく、マウント先にしたところ、起動時にエラーが発生
+```
+# ディバイスの属性情報を表示
+sudo blkid /dev/sda1
+# マウントする先のフォルダ追加
+sudo mkdir /mtn/NAS/Share
+# 調べたUUIDを自動的にマウントするようにする
+sudo nano /etc/fstab
+proc            /proc           proc    defaults          0       0
+/dev/mmcblk0p6  /boot           vfat    defaults          0       2
+/dev/mmcblk0p7  /               ext4    defaults,noatime  0       1
+# a swapfile is not a swap partition, no line here
+#   use  dphys-swapfile swap[on|off]  for that
+# 追記
+UUID="--調べたID--" /mnt/NAS/Share  ntfs-3g,nofail    0       0
+```
+6. Sambaをインストール
+- LinuxのWindowsネットワークを実装するソフトウェア
+```
+sudo apt-get install samba
+sudo apt-get install samba-common-bin
+```
+7. ユーザを追加、権限設定
+```
+# ユーザ名をsmbuserとする
+sudo useradd smbuser
+sudo passwd smbuser
+# パスワードの設定
+# 権限設定
+sudo chown smbuser:smbuser /mnt/NAS/Share
+# 外部からRaspberryPiにアクセスする際のパスワード設定
+sudo pdbedit -a smbuser
+# パスワード設定
+```
+8. configを設定
+```
+sudo nano /etc/samba/smb.conf
+# ファイルを下記のように設定
+[Share]
+	comment = Share Folder
+	browseable = yes
+	path = /mnt/NAS
+	writable = yes
+	valid users = smbuser
+	force user = smbuser
+```
+9. sambaを再起動
+```
+sudo /etc/init.d/samba restart
+```
+
+## Macから共有フォルダに入るには、Finderの移動から[smb://IPアドレス]でフォルダが開く
