@@ -1,0 +1,38 @@
+# Let’s Encryptで無料SSL化:WordpressをHttps対応
+1. SSHでログイン
+2. letsencryptのCertbot クライアントをダウンロード
+```
+cd /tmp
+git clone https://github.com/letsencrypt/letsencrypt
+cd letsencrypt
+./letsencrypt-auto
+```
+3. ドメインに対して、SSL証明書を取得し、設定を行う
+```
+./letsencrypt-auto certonly --webroot -w /opt/bitnami/apps/wordpress/htdocs/ -d output-hitokoto.work
+# メールアドレスを入力し、yesを選択
+sudo cp /etc/letsencrypt/live/output-hitokoto.work/fullchain.pem /opt/bitnami/apache2/conf/server.crt
+sudo cp /etc/letsencrypt/live/output-hitokoto.work/privkey.pem /opt/bitnami/apache2/conf/server.key
+```
+4. apacheを再起動
+```
+sudo /opt/bitnami/ctlscript.sh restart apache
+```
+5. wordpressのサイトアドレスを変更するために、wp-configファイルを修正
+```
+nano /opt/bitnami/apps/wordpress/htdocs/wp-config.php
+```
+6. リダイレクト設定
+```
+sudo nano /opt/bitnami/apps/wordpress/conf/httpd-prefix.conf
+# 下記内容を追記
+RewriteEngine On
+RewriteCond "%{HTTPS}"!=on
+RewriteRule "^/?(.*)" https://%{SERVER_NAME}/$1 [R,L]
+```
+7. apacheを再起動
+
+https://qiita.com/foursue/items/8e685b52cfddf05875ee
+https://free-ssl.jp/
+http://blog.office-aship.info/bitnami-wordpress-lets-encrypt-https/
+

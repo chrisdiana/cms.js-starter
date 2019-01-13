@@ -1,0 +1,39 @@
+# ブログをAWSを使って簡単に構築：AWS lightsailでWordpressインストール済みのコンテナ作成
+
+1. AWSのコンソールからlightsailを検索し、開く
+2. インスタンスを作成
+ロケーション：東京
+プラットフォーム：Linux/Unix
+設計図：Wordpress
+プラン：$3.50
+3. 静的パブリックIPアドレスを固定する
+IPアドレスを直打ちするとWordpressがインストールされていることがわかる
+4. SSHのデフォルトキーペアをダウンロード
+権限を「自分のみ読み出し可」設定しないと警告がでる
+5. SSH接続
+```
+ssh -i [pemファイル] bitnami@[静的パブリックIPアドレス]
+```
+6. WordPressのユーザー名・パスワードを確認
+```
+cat bitnami_credentials
+```
+７.[IPアドレス]/adminとうち、ログイン画面から上記を入力
+--- 管理画面が起動 --- 
+・日本語化
+・アップデート
+https://lightsail.aws.amazon.com/ls/docs/ja/articles/amazon-lightsail-quick-start-guide-wordpress
+
+1. お名前.comのドメインNaviにログイン
+2.　ドメイン設定からDNS関連機能設定に進み、該当のアドレスを選択
+3. DNSレコードを設定を選択
+4. 下記のように設定
+ホスト名: [blank]
+TYPE: A
+TTL: 3600[そのまま]
+VALUE:[静的パブリックIPアドレス]
+5. 設定を保存して、10分程度でWordpressが表示された
+※設定前は、下記エラー表示だったものが、
+ERR_NAME_NOT_RESOLVED
+アクセスできるようになっているので、
+ドメイン名から、IPアドレスに逆引き（名前解決）できていることがわかる
