@@ -8,6 +8,7 @@ author: Mark
 ---
 
 This blog post shows a few different types of content that's supported and styled with Markdown. Basic typography, images, and code are all supported.
+hello world
 
 -----
 
