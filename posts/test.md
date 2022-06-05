@@ -1,9 +1,11 @@
 ---
 layout: post
-title: Another blog post
-excerpt: Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
+title: Blog post teset
+excerpt: Hello?
+date: 2022-06-05
 tags: sampletag
-author: Jacob
+author: Haruki
 ---
 
-テストです
+I made this post for testing the CMS.js template.
+Does it work?
