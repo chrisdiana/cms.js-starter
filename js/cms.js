@@ -136,7 +136,11 @@ var CMS = function (o) {
 
   function p(t) {
     var e = new Date(t);
-    return e.setDate(e.getDate()), [e.getFullYear(),e.getMonth(),e.getDate()].join("/")
+    console.log(e);
+    console.log(e.getMonth());
+    console.log(e.getDate());
+    
+    return e.setDate(e.getDate()), [e.getFullYear(),e.getMonth()+1,e.getDate()].join("/")
   }
 
   function m(t) {
