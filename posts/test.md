@@ -9,3 +9,6 @@ author: Haruki
 
 I made this post for testing the CMS.js template.
 Does it work?
+
+I'll embed an image
+![test image](https://i.gyazo.com/bdf2414e83ecb904132a7728d3e232ed.png)
