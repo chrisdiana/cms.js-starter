@@ -8,12 +8,6 @@
   animation: fadein 1s;
 }
 
-h1 {
-    font-size : 36px; 
-    line-height : 1;
-    /* 要素の高さ：48px（要素を配置するときの高さの基準の2倍）*/
-}
-
 @keyframes fadein {
   from { opacity: 0; }
   to   { opacity: 1; }
