@@ -3,13 +3,22 @@
   <% data.posts.forEach(function(post) { %>
     <% if(!post.draft) { %>
       <article class="post">
+        <time class="post-date"><%= post.date %></time>
         <h1 class="post-title">
           <a href="<%= post.permalink %>"><%= post.title %></a>
         </h1>
-        <time class="post-date"><%= post.date %></time>
         <div class="post-content">
           <% if(post.excerpt) { %>
-            <p><%= post.excerpt %></p>
+            <div><font size="3rem"> ... <%= post.excerpt %></font></div>
+          <% } %>
+        </div>
+        <div class="post-tags">
+          <% if(post.tags) { %>
+            <% post.tags.forEach(function(tag) { %>
+              <% if(tag) { %>
+                <a href="#/posts?tag=<%= tag %>" class="post-tag"><%= tag %></a>
+              <% } %>
+            <% }) %>
           <% } %>
         </div>
       </article>
